@@ -1,19 +1,18 @@
-#include <QCoreApplication>
+#include <QApplication>
 #include "client.h"
+#include "atm2.h"
+#include "keypad.h"
+#include "cardeater.h"
+#include "controller.h"
+
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
-    Client client;
+    QApplication a(argc, argv);
 
-    client.connect("localhost",1234);
+    ATM2 form;
 
-    if(client.isConnected()){
+    form.show();
 
-    }else{
-
-    }
-
-    client.disconnect();
 
     return a.exec();
 }

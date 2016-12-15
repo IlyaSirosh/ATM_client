@@ -12,12 +12,15 @@ public:
     void connect(const QString& host, int port);
     bool isConnected()const;
     void disconnect();
+    QString response();
+    void request(const QString& req);
 signals:
 
 public slots:
 
 private:
     QTcpSocket *_socket;
+    bool _connected;
 };
 
 #endif // CLIENT_H
