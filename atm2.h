@@ -32,7 +32,7 @@ public slots:
     void contrClose();
     void contrEject();
 
-    void cardInjected();
+    void cardInjected(const QString&);
 
 private:
     QTextBrowser* _mainScreen;

@@ -31,6 +31,8 @@ void CardEater::createLayout(){
 void CardEater::submit(){
 
     _card = _input->text();
+
+    emit getCard(_card);
 }
 
 const QString& CardEater::getCardNumber() const{

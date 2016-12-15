@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QDateTime>
+#include <QDebug>
 
 ATM2::ATM2(QWidget *parent) :
     QWidget(parent),
@@ -16,13 +17,16 @@ ATM2::ATM2(QWidget *parent) :
     _teller(new CashTeller())
 {
     connect(_keypad, SIGNAL(digitClicked(int)),this,SLOT(keypadClicked(int)));
-    connect(_keypad, SIGNAL(okClicked()),this,SLOT(keypadClicked(int)));
-    connect(_keypad, SIGNAL(removeClicked()),this,SLOT(keypadClicked(int)));
+    connect(_keypad, SIGNAL(okClicked()),this,SLOT(keypadOK()));
+    connect(_keypad, SIGNAL(removeClicked()),this,SLOT(keypadRemove()));
 
 
     connect(_controller,SIGNAL(on_power(bool)),this,SLOT(contrPower(bool)));
     connect(_controller,SIGNAL(close()),this,SLOT(contrClose()));
     connect(_controller,SIGNAL(eject()),this,SLOT(contrEject()));
+
+    connect(_cardEater,SIGNAL(getCard(QString)),this,SLOT(cardInjected(QString)));
+
 
     connect(this, SIGNAL(close_app()),
                     QApplication::instance(), SLOT(quit()));
@@ -165,7 +169,7 @@ void ATM2::keypadRemove(){
 void ATM2::contrPower(bool on){
     if(on){
         _state.startWorking();
-        _client->connect("localhost",3333);
+        _client->connect("localhost",1111);
         injectCard();
     }else{
         if(_cardEater->isInjected()){
@@ -195,8 +199,10 @@ void ATM2::ejectCard(){
     }
 }
 
-void ATM2::cardInjected(){
-    _client->request("01:"+_cardEater->getCardNumber());
+void ATM2::cardInjected(const QString& card){
+    _client->request("01:"+card);
+
+    qDebug()<<(card);
 
     QString resp = _client->response();
 

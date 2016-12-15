@@ -13,7 +13,7 @@ public:
     const QString& getCardNumber() const;
     bool isInjected()const;
 signals:
-
+    void getCard(const QString&);
 public slots:
     void submit();
 private:
