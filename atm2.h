@@ -9,6 +9,7 @@
 #include "controller.h"
 #include "atmstate.h"
 #include "client.h"
+#include "cashteller.h"
 
 class ATM2 : public QWidget
 {
@@ -43,6 +44,7 @@ private:
     QLabel* _info;
     QString _result;
     Client* _client;
+    CashTeller* _teller;
 
     void createLayout();
     void doOperation(int);

@@ -19,7 +19,8 @@ SOURCES += main.cpp \
     keypad.cpp \
     cardeater.cpp \
     controller.cpp \
-    atmstate.cpp
+    atmstate.cpp \
+    cashteller.cpp
 
 HEADERS += \
     client.h \
@@ -27,7 +28,8 @@ HEADERS += \
     keypad.h \
     cardeater.h \
     controller.h \
-    atmstate.h
+    atmstate.h \
+    cashteller.h
 
 FORMS += \
     atm.ui

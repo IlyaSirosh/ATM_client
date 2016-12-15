@@ -12,7 +12,8 @@ ATM2::ATM2(QWidget *parent) :
     _cardEater(new CardEater()),
     _controller(new Controller()),
     _info(new QLabel()),
-    _client(new Client())
+    _client(new Client()),
+    _teller(new CashTeller())
 {
     connect(_keypad, SIGNAL(digitClicked(int)),this,SLOT(keypadClicked(int)));
     connect(_keypad, SIGNAL(okClicked()),this,SLOT(keypadClicked(int)));
@@ -239,6 +240,7 @@ void ATM2::injectCard(){
 void ATM2::close(){
     _client->request("05");
     ejectCard();
+    _client->disconnect();
 }
 void ATM2::printCheck(const QString& cash){
     QDateTime date;
@@ -251,6 +253,7 @@ void ATM2::checkForGetCash(const QString& cash){
     QString resp = _client->response();
 
     if(resp=="1"){
+        _teller->withdrawCash(cash);
         printCheck(cash);
     }else{
         _checkScreen->setText("Cannot get cash");
