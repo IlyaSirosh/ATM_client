@@ -42,3 +42,7 @@ const QString& CardEater::getCardNumber() const{
 bool CardEater::isInjected()const{
     return _card.length()!=0;
 }
+
+void CardEater::setInput(const QString& s){
+    _input->setText(s);
+}

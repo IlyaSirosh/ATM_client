@@ -12,6 +12,7 @@ public:
     ~CardEater();
     const QString& getCardNumber() const;
     bool isInjected()const;
+    void setInput(const QString&);
 signals:
     void getCard(const QString&);
 public slots:

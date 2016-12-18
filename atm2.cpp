@@ -80,14 +80,16 @@ void ATM2::keypadClicked(int digit){
     if(_state==ATMState::CHOOSE_STATE){
         if(digit==5){
             close();
-        }else{
+        }else
 
+        {
             doOperation(digit+2);
+
         }
     }else
     if(_state==ATMState::GET_PIN_STATE){
-            _result+=digit;
-            _mainScreen->append("*");
+            _result+=QString::number(digit);
+            _mainScreen->setText(_mainScreen->toPlainText()+"*");
     }else
     if(_state==ATMState::GET_CASH){
 
@@ -119,6 +121,8 @@ void ATM2::keypadClicked(int digit){
         }else{
             ejectCard();
         }
+        _mainScreen->setText("");
+        _checkScreen->setText("");
      }
 
 }
@@ -127,10 +131,11 @@ void ATM2::doOperation(int digit){
 
 
     if(digit==3){
-        _client->request("04");
+        _client->request("03");
         QString resp = _client->response();
 
         _checkScreen->setText("Ваш баланс:"+resp);
+
         wantToContinue();
     }else
     if(digit==4){
@@ -144,9 +149,10 @@ void ATM2::keypadOK(){
 
     if(_state==ATMState::GET_PIN_STATE){
         _client->request("02:"+_result);
+        qDebug()<<"req pin "<<_result<<endl;
         _result = "";
         QString resp = _client->response();
-
+        qDebug()<<"resp "<<resp<<endl;
         if(resp=="1"){
             _state.startChoose();
             showMenu();
@@ -161,7 +167,7 @@ void ATM2::keypadRemove(){
     if(_result.length()>0){
         _result = _result.left(_result.length()-1);
         QString main = _mainScreen->toPlainText();
-        _mainScreen->setText(main.leftJustified(main.length()-1));
+        _mainScreen->setText(main.left(main.length()-1));
     }
 
 }
@@ -169,7 +175,7 @@ void ATM2::keypadRemove(){
 void ATM2::contrPower(bool on){
     if(on){
         _state.startWorking();
-        _client->connect("localhost",1111);
+        _client->connect("localhost",9999);
         injectCard();
     }else{
         if(_cardEater->isInjected()){
@@ -196,6 +202,9 @@ void ATM2::ejectCard(){
     if(_state.working()){
         _info->setText("Заберіть картку");
         _state.stopWorking();
+        _controller->power();
+        _mainScreen->setText("");
+        _checkScreen->setText("");
     }
 }
 
@@ -212,6 +221,9 @@ void ATM2::cardInjected(const QString& card){
         _mainScreen->setText("Помилка. Цієї картки немає в базі даних");
         ejectCard();
     }
+
+    _cardEater->setVisible(false);
+    _cardEater->setInput("");
 }
 
 void ATM2::showMenu(){
@@ -230,7 +242,7 @@ void ATM2::wantToContinue(){
     _mainScreen->setText("Ви хочете продовжити роботу?\n1 - Так\n2 - Ні");
     _info->setText("Зробіть ваш вибір");
     _state.startWantToContinue();
-    _checkScreen->setText("");
+
 }
 
 void ATM2::checkPassword(){
